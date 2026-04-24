@@ -39,7 +39,6 @@ export function BoxBreathPacer({ cycles = 3, onComplete }: BoxBreathPacerProps) 
   const [running, setRunning] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [phaseIdx, setPhaseIdx] = useState(0); // 0..(cycles*4)
-  const [phaseStartedAt, setPhaseStartedAt] = useState<number | null>(null);
 
   // Refs collect data across the run without re-renders.
   const startRef = useRef<number | null>(null);
