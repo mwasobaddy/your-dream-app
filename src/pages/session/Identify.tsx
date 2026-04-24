@@ -45,11 +45,10 @@ const IdentifyInner = () => {
     try {
       await identifyService.save(activeSessionId, stateId, prosody);
       advanceStep("identify");
-      // Track step is not yet built; for now route home with a success toast.
       toast.success("Baseline saved", {
-        description: "Ground & Heal and Track steps coming next.",
+        description: "Now let's slow things down with Ground & Heal.",
       });
-      navigate("/");
+      navigate("/session/ground-heal");
     } catch (err) {
       toast.error("Could not save", {
         description: err instanceof Error ? err.message : undefined,
