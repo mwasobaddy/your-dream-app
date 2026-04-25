@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
+import { jsonExportService } from "@/services/export/jsonExportService";
 import { getOrCreateDeviceUUID } from "@/lib/identity";
 import { APP_CONFIG } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Database, Smartphone, Trash2 } from "lucide-react";
+import { Database, Smartphone, Trash2, Download } from "lucide-react";
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -16,11 +17,25 @@ const formatBytes = (bytes: number) => {
 const SettingsPage = () => {
   const [usage, setUsage] = useState<{ usage: number; quota: number } | null>(null);
   const [deviceUuid, setDeviceUuid] = useState("");
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     setDeviceUuid(getOrCreateDeviceUUID());
     sessionStorageService.getStorageEstimate().then(setUsage);
   }, []);
+
+  const handleExportAll = async () => {
+    setExporting(true);
+    try {
+      const sessions = await sessionStorageService.getAll();
+      jsonExportService.downloadAll(sessions, `SIGHT-export-all.json`);
+      toast.success(`Exported ${sessions.length} session(s)`);
+    } catch {
+      toast.error("Failed to export sessions");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const handleDeleteAll = async () => {
     if (!confirm("Delete ALL sessions on this device? This cannot be undone.")) return;
@@ -80,6 +95,23 @@ const SettingsPage = () => {
           <div className="text-xs text-muted-foreground">
             App {APP_CONFIG.APP_VERSION} · Schema v{APP_CONFIG.SCHEMA_VERSION}
           </div>
+        </section>
+
+        <section className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm space-y-3">
+          <div className="flex items-center gap-2 text-sm font-semibold">
+            <Download className="h-4 w-4 text-teal" /> Export all data
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Download every session on this device as a single JSON bundle.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportAll}
+            disabled={exporting}
+          >
+            {exporting ? "Preparing…" : "Export all sessions"}
+          </Button>
         </section>
 
         <section className="rounded-2xl bg-card border border-destructive/20 p-5 shadow-sm space-y-3">

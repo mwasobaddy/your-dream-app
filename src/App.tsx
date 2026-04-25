@@ -5,10 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import ScanPage from "./pages/session/Scan.tsx";
-import IdentifyPage from "./pages/session/Identify.tsx";
-import GroundHealPage from "./pages/session/GroundHeal.tsx";
-import TrackPage from "./pages/session/Track.tsx";
+import ScanPage from "@/pages/session/Scan";
+import IdentifyPage from "@/pages/session/Identify";
+import GroundHealPage from "@/pages/session/GroundHeal";
+import TrackPage from "@/pages/session/Track";
+import SessionSummaryPage from "@/pages/session/SessionSummary";
 import HistoryPage from "./pages/History.tsx";
 import SettingsPage from "./pages/Settings.tsx";
 
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
   { path: "/session/identify", element: <IdentifyPage /> },
   { path: "/session/ground-heal", element: <GroundHealPage /> },
   { path: "/session/track", element: <TrackPage /> },
+  { path: "/session/summary/:sessionId", element: <SessionSummaryPage /> },
   { path: "/history", element: <HistoryPage /> },
   { path: "/settings", element: <SettingsPage /> },
   { path: "*", element: <NotFound /> },

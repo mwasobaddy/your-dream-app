@@ -13,6 +13,7 @@ import {
   PaginationEllipsis,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { ExportPanel } from "@/components/export/ExportPanel";
 import { CheckCircle2, Clock, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -119,6 +120,16 @@ const HistoryPage = () => {
                         {step.replace("_", " ")}
                       </span>
                     ))}
+                  </div>
+
+                  {/* Export controls for completed sessions */}
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="text-[10px] text-muted-foreground">
+                      {s.device_metadata?.platform || ''}
+                    </span>
+                    {s.session_completion && (
+                      <ExportPanel session={s} />
+                    )}
                   </div>
                 </li>
               ))}

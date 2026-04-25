@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, AlertTriangle } from "lucide-react";
+import { ArrowRight, AlertTriangle, FileDown } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { StepProgress } from "@/components/session/StepProgress";
 import { StepGuard } from "@/components/layout/StepGuard";
@@ -10,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import { useSessionStore } from "@/stores/sessionStore";
 import { trackService } from "@/services/session/trackService";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
+import { ExportPanel } from "@/components/export/ExportPanel";
 import { YIN_CONFIG } from "@/lib/config";
-import type { VoiceProsodyFeatures, TrackStepData, VoiceDelta } from "@/types/session";
 import { cn } from "@/lib/utils";
+import type { SightSession, VoiceProsodyFeatures, TrackStepData, VoiceDelta } from "@/types/session";
 import { toast } from "sonner";
 
 const SKIPPED_PROSODY: VoiceProsodyFeatures = {
@@ -53,7 +54,7 @@ const TrackInner = () => {
       });
       // Mark the session as completed in Dexie
       await sessionStorageService.complete(activeSessionId, new Date().toISOString());
-      navigate("/history");
+      navigate(`/session/summary/${activeSessionId}`);
     } catch (err) {
       toast.error("Could not save track data", {
         description: err instanceof Error ? err.message : undefined,
@@ -134,6 +135,21 @@ const TrackInner = () => {
           </section>
         )}
 
+        {/* Export option before saving */}
+        {result && (
+          <section className="space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              3. Export (optional)
+            </h3>
+            <div className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm">
+              <p className="text-xs text-muted-foreground mb-3">
+                Download your session report before saving.
+              </p>
+              <SessionExport sessionId={activeSessionId!} />
+            </div>
+          </section>
+        )}
+
         <Button
           onClick={handleSave}
           disabled={!canSave || saving}
@@ -194,6 +210,17 @@ function DeltaRow({
       </span>
     </div>
   );
+}
+
+/** Loads a session by ID and renders the ExportPanel. */
+function SessionExport({ sessionId }: { sessionId: string }) {
+  const [session, setSession] = useState<SightSession | null>(null);
+  useEffect(() => {
+    if (!sessionId) return;
+    sessionStorageService.getById(sessionId).then(setSession);
+  }, [sessionId]);
+  if (!session) return null;
+  return <ExportPanel session={session} variant="page" />;
 }
 
 const TrackPage = () => (
