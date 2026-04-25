@@ -1,7 +1,7 @@
 /**
- * PWA service worker registration with iframe + Lovable-preview guard.
+ * PWA service worker registration with iframe + Sight Lab-preview guard.
  *
- * Service workers in iframes (Lovable's editor preview) cause stale content
+ * Service workers in iframes (Sight Lab's editor preview) cause stale content
  * and routing issues. We unregister any pre-existing SW in those contexts and
  * only register in real production deployments.
  */
@@ -18,7 +18,7 @@ const isInIframe = (() => {
 const isPreviewHost =
   typeof window !== "undefined" &&
   (window.location.hostname.includes("id-preview--") ||
-    window.location.hostname.includes("lovableproject.com"));
+    window.location.hostname.includes("sight-lab.com"));
 
 export function registerSW() {
   if (typeof window === "undefined") return;
