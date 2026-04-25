@@ -95,7 +95,7 @@ function buildPage2Schemas(session: SightSession) {
   const yBase = M;
 
   const groundBody = [
-    `Adherence: ${steps.ground_heal?.ground_adherence_ratio !== null ? (steps.ground_heal!.ground_adherence_ratio! * 100).toFixed(0) + '%' : '\u2014'}`,
+    `Adherence: ${steps.ground_heal?.ground_adherence_ratio != null ? (steps.ground_heal.ground_adherence_ratio * 100).toFixed(0) + '%' : '\u2014'}`,
     `Press-hold duration: ${val(steps.ground_heal?.heal_hold_duration_ms, 'ms')}`,
     `Release velocity: ${val(steps.ground_heal?.heal_release_velocity_ms, 'ms')}`,
     `Timestamp: ${fmt(steps.ground_heal?.timestamp_iso || null)}`,
@@ -148,7 +148,7 @@ function buildInputs(session: SightSession) {
   const p2 = {
     h2_ground: '3. Ground / Heal \u2014 Breathing',
     ground_body: [
-      `Adherence: ${steps.ground_heal?.ground_adherence_ratio != null ? (steps.ground_heal!.ground_adherence_ratio! * 100).toFixed(0) + '%' : '\u2014'}`,
+      `Adherence: ${steps.ground_heal?.ground_adherence_ratio != null ? (steps.ground_heal.ground_adherence_ratio * 100).toFixed(0) + '%' : '\u2014'}`,
       `Press-hold: ${val(steps.ground_heal?.heal_hold_duration_ms, 'ms')}`,
       `Release velocity: ${val(steps.ground_heal?.heal_release_velocity_ms, 'ms')}`,
       `Timestamp: ${fmt(steps.ground_heal?.timestamp_iso || null)}`,
