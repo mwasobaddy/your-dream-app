@@ -47,6 +47,7 @@ export default defineConfig(async ({ mode }) => ({
       workbox: {
         // Never cache OAuth callback or any preview-specific routes.
         navigateFallbackDenylist: [/^\/~oauth/],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // 4 MiB
         runtimeCaching: [
           {
             urlPattern: ({ request }) =>
