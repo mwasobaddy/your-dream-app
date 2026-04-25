@@ -4,7 +4,7 @@ import { useAudioCapture } from "@/hooks/useAudioCapture";
 import { CAPTURE } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { VoiceProsodyFeatures } from "@/types/session";
 
 interface VoiceCaptureProps {
@@ -21,36 +21,42 @@ export function VoiceCapture({
   onCaptured,
   durationMs = CAPTURE.DURATION_MS,
   onSkip,
-  promptText = "Hold the button and say a few words about how you feel right now.",
+  promptText = "Press and hold the button while you speak. Release when you're done.",
 }: VoiceCaptureProps) {
-  const { state, result, error, capture } = useAudioCapture();
+  const { state, result, error, start, stop } = useAudioCapture();
   const [progress, setProgress] = useState(0);
+  const holdTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
-    if (state !== "recording") {
-      setProgress(0);
-      return;
-    }
-    const start = performance.now();
-    let raf: number;
-    const tick = () => {
-      const pct = Math.min(1, (performance.now() - start) / durationMs);
-      setProgress(pct);
-      if (pct < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [state, durationMs]);
-
+  // Forward result to parent
   useEffect(() => {
     if (result) onCaptured(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
-  const handleStart = () => {
-    capture(durationMs).catch(() => {
-      /* state already set to error */
-    });
+  // Progress bar while recording
+  useEffect(() => {
+    if (state !== "recording") {
+      setProgress(0);
+      return;
+    }
+    const startTime = performance.now();
+    const tick = () => {
+      const pct = Math.min(1, (performance.now() - startTime) / durationMs);
+      setProgress(pct);
+    };
+    holdTimerRef.current = setInterval(tick, 50);
+    return () => {
+      if (holdTimerRef.current) clearInterval(holdTimerRef.current);
+    };
+  }, [state, durationMs]);
+
+  const handlePointerDown = () => {
+    if (state !== "idle" && state !== "done" && state !== "error") return;
+    start(durationMs);
+  };
+
+  const handlePointerUp = () => {
+    if (state === "recording") stop();
   };
 
   const isRecording = state === "recording";
@@ -82,14 +88,19 @@ export function VoiceCapture({
           )}
 
           <button
-            onClick={handleStart}
-            disabled={isRecording || isProcessing}
+            onMouseDown={handlePointerDown}
+            onMouseUp={handlePointerUp}
+            onMouseLeave={handlePointerUp}
+            onTouchStart={handlePointerDown}
+            onTouchEnd={handlePointerUp}
+            disabled={isProcessing}
             className={cn(
-              "relative grid h-28 w-28 place-items-center rounded-full text-teal-foreground transition-all shadow-elevated",
+              "relative grid h-28 w-28 place-items-center rounded-full text-teal-foreground transition-all shadow-elevated select-none",
               isRecording ? "bg-destructive scale-105" : "bg-gradient-teal hover:scale-105",
-              isProcessing && "opacity-70"
+              isProcessing && "opacity-70",
+              !isRecording && !isProcessing && "active:scale-95"
             )}
-            aria-label={isRecording ? "Recording" : "Start voice capture"}
+            aria-label={isRecording ? "Recording — release to stop" : "Hold to record"}
           >
             {isProcessing ? (
               <Loader2 className="h-10 w-10 animate-spin" />
@@ -102,12 +113,12 @@ export function VoiceCapture({
         <div className="text-center min-h-[3rem]">
           {state === "idle" && (
             <p className="text-xs text-muted-foreground">
-              Tap to record · {Math.round(durationMs / 1000)}s
+              Hold to record · up to {Math.round(durationMs / 1000)}s
             </p>
           )}
           {isRecording && (
             <>
-              <p className="text-sm font-medium text-foreground">Listening…</p>
+              <p className="text-sm font-medium text-foreground">Recording — keep speaking…</p>
               <div className="mt-2 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full bg-teal transition-[width] duration-100"

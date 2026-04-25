@@ -9,24 +9,33 @@ export interface PressHoldResult {
   press_start_ms: number;
   /** total ms held down */
   hold_duration_ms: number;
-  /** ms it took for release after the user began letting go (we approximate as time
-   * between pointerup event firing and pointer leaving the target) */
+  /** ms it took for release after the user began letting go */
   release_velocity_ms: number;
 }
 
-const TARGET_HOLD_MS = 6000;
 const MIN_VALID_HOLD_MS = 2000;
 
 interface PressHoldProps {
   onComplete: (result: PressHoldResult) => void;
+  /** Duration the user should hold to fill the ring (ms). Default 6000. */
+  targetDurationMs?: number;
+  /** Called when the user presses down */
+  onPressStart?: () => void;
+  /** Called when the user releases (regardless of validity) */
+  onPressEnd?: () => void;
 }
 
 /**
  * Press-and-hold target. The user places a hand/finger on a calm body region
- * (heart, belly) and holds for ~6 seconds. We capture press start, hold duration,
- * and a release-velocity proxy.
+ * (heart, belly) and holds. The ring fills over `targetDurationMs` which
+ * should match the total breath pacer time for synchronisation.
  */
-export function PressHold({ onComplete }: PressHoldProps) {
+export function PressHold({
+  onComplete,
+  targetDurationMs = 6000,
+  onPressStart,
+  onPressEnd,
+}: PressHoldProps) {
   const mountRef = useRef<number>(performance.now());
   const pressStartRef = useRef<number | null>(null);
   const releaseInitRef = useRef<number | null>(null);
@@ -42,12 +51,12 @@ export function PressHold({ onComplete }: PressHoldProps) {
     const tick = () => {
       const start = pressStartRef.current ?? performance.now();
       const elapsed = performance.now() - start;
-      setProgress(Math.min(1, elapsed / TARGET_HOLD_MS));
+      setProgress(Math.min(1, elapsed / targetDurationMs));
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [pressed]);
+  }, [pressed, targetDurationMs]);
 
   const handlePressStart = () => {
     if (result) return;
@@ -56,20 +65,20 @@ export function PressHold({ onComplete }: PressHoldProps) {
     releaseInitRef.current = null;
     setPressed(true);
     setProgress(0);
+    onPressStart?.();
   };
 
   const handlePressEnd = () => {
     if (!pressed || pressStartRef.current == null) return;
     const now = performance.now();
-    // First "release event" — start the release-velocity timer.
     if (releaseInitRef.current == null) {
       releaseInitRef.current = now;
     }
     const start = pressStartRef.current;
     const hold = now - start;
     setPressed(false);
+    onPressEnd?.();
 
-    // Approximate release_velocity: finalize on next frame.
     requestAnimationFrame(() => {
       const releaseEnd = performance.now();
       const release = Math.max(0, releaseEnd - (releaseInitRef.current ?? releaseEnd));
@@ -80,7 +89,6 @@ export function PressHold({ onComplete }: PressHoldProps) {
       };
 
       if (hold < MIN_VALID_HOLD_MS) {
-        // Too short — let user try again, don't commit.
         pressStartRef.current = null;
         setProgress(0);
         return;
@@ -97,6 +105,8 @@ export function PressHold({ onComplete }: PressHoldProps) {
     setProgress(0);
     setResult(null);
   };
+
+  const totalSeconds = Math.round(targetDurationMs / 1000);
 
   return (
     <div className="space-y-4">
@@ -172,7 +182,7 @@ export function PressHold({ onComplete }: PressHoldProps) {
             ) : pressed ? (
               <motion.div key="hold" className="space-y-1">
                 <div className="text-2xl font-bold text-teal">
-                  {Math.ceil((1 - progress) * (TARGET_HOLD_MS / 1000))}
+                  {Math.ceil((1 - progress) * totalSeconds)}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
                   Keep holding
@@ -184,7 +194,7 @@ export function PressHold({ onComplete }: PressHoldProps) {
                   Press &amp; hold
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                  ~6 seconds
+                  ~{totalSeconds} seconds
                 </div>
               </motion.div>
             )}
