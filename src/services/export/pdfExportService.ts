@@ -163,7 +163,7 @@ function buildInputs(session: SightSession) {
       `Energy change: ${val(steps.track?.voice_delta?.energy_delta_db, 'dB')}`,
       `Timestamp: ${fmt(steps.track?.timestamp_iso || null)}`,
     ].join('\n'),
-    disclaimer: 'SIGHT Lab V0.1 is a research prototype. Not a clinical assessment or diagnosis. For research only.',
+    disclaimer: 'Data in this report was processed entirely on-device. No PII is collected, transmitted, or stored externally.',
   };
 
   return [p1, p2];

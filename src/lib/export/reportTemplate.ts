@@ -4,11 +4,9 @@
 
 import type { SightSession } from '@/types/session';
 
-export const RESEARCH_DISCLAIMER = `
-  SIGHT Lab V0.1 is a research feasibility prototype.
-  This report is not a clinical assessment, medical diagnosis,
-  or therapeutic recommendation. Use for research purposes only.
-  For personalised guidance, refer to your Tactical Healing Journal.
+export const PRIVACY_DISCLAIMER = `
+  Data in this report was processed entirely on-device.
+  No PII is collected, transmitted, or stored externally.
 `.trim();
 
 function formatTimestamp(iso: string | null): string {
@@ -200,7 +198,7 @@ export function buildReportHTML(session: SightSession): string {
     <tr><td>Timestamp</td><td>${formatTimestamp(steps.track?.timestamp_iso || null)}</td></tr>
   </table>
 
-  <div class="disclaimer">${RESEARCH_DISCLAIMER}</div>
+  <div class="disclaimer">${PRIVACY_DISCLAIMER}</div>
 </body>
 </html>
   `.trim();

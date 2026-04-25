@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mic, Activity, Wind, LineChart, ArrowRight, Shield } from "lucide-react";
+import { Mic, Activity, Wind, LineChart, ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { startNewSession } from "@/services/session/sessionOrchestrator";
@@ -39,17 +39,13 @@ const Index = () => {
         className="space-y-8"
       >
         <header className="text-center space-y-3 pt-4">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-[11px] font-medium text-brand uppercase tracking-wider">
-            <Shield className="h-3 w-3" />
-            Research prototype · v0.1
-          </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Somatic Emotional<br />
             Regulation Protocol
           </h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
             A four-step somatic check-in. Captures body, voice, breath, and shift —
-            entirely on this device.
+            entirely on this device. No PII is collected. Your data is yours.
           </p>
         </header>
 
@@ -96,8 +92,12 @@ const Index = () => {
         </div>
 
         <p className="text-[11px] text-muted-foreground text-center leading-relaxed pt-4 border-t border-border/40">
-          Not a clinical assessment, medical diagnosis, or therapeutic recommendation.
-          For research purposes only.
+          Everything runs entirely on this device. No PII is ever collected,
+          transmitted, or stored externally. Your data is yours —{" "}
+          <Link to="/settings" className="underline underline-offset-2 hover:text-foreground transition-colors">
+            visit settings
+          </Link>{" "}
+          to manage or export it.
         </p>
       </motion.section>
     </AppShell>
