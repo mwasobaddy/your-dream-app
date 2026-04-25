@@ -186,13 +186,48 @@ export const pdfExportService = {
     return new Blob([uint8array], { type: 'application/pdf' });
   },
 
-  /** Download a session report as a PDF file */
+  /** Download a single session report as a PDF file */
   async downloadSession(session: SightSession): Promise<void> {
     const blob = await this.generateBlob(session);
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = `sight-session-${session.session_id.slice(0, 8)}.pdf`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  },
+
+  /**
+   * Export all sessions as a single merged PDF.
+   * Each session renders on its own set of page(s) — no data is truncated.
+   */
+  async downloadAll(sessions: SightSession[]): Promise<void> {
+    if (sessions.length === 0) return;
+
+    // Generate each session's PDF separately
+    const pdfBuffers = await Promise.all(
+      sessions.map((s) => this.generateBlob(s).then((b) => b.arrayBuffer())),
+    );
+
+    // Merge all pages into one document using @pdfme/pdf-lib
+    const { PDFDocument } = await import('@pdfme/pdf-lib');
+    const merged = await PDFDocument.create();
+
+    for (const buf of pdfBuffers) {
+      const doc = await PDFDocument.load(buf);
+      const pages = await merged.copyPages(doc, doc.getPageIndices());
+      pages.forEach((p) => merged.addPage(p));
+    }
+
+    const mergedBytes = await merged.save();
+    const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `SIGHT-all-sessions-${Date.now()}.pdf`;
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);

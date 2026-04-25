@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
 import { jsonExportService } from "@/services/export/jsonExportService";
+import { csvExportService } from "@/services/export/csvExportService";
+import { pdfExportService } from "@/services/export/pdfExportService";
 import { getOrCreateDeviceUUID } from "@/lib/identity";
 import { APP_CONFIG } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Database, Smartphone, Trash2, Download } from "lucide-react";
+import { Database, Smartphone, Trash2, Download, FileJson, FileText, Table } from "lucide-react";
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -14,26 +16,44 @@ const formatBytes = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 };
 
+type ExportFormat = "pdf" | "csv" | "json";
+
 const SettingsPage = () => {
   const [usage, setUsage] = useState<{ usage: number; quota: number } | null>(null);
   const [deviceUuid, setDeviceUuid] = useState("");
-  const [exporting, setExporting] = useState(false);
+  const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null);
 
   useEffect(() => {
     setDeviceUuid(getOrCreateDeviceUUID());
     sessionStorageService.getStorageEstimate().then(setUsage);
   }, []);
 
-  const handleExportAll = async () => {
-    setExporting(true);
+  const handleExportAll = async (format: ExportFormat) => {
+    setExportingFormat(format);
     try {
       const sessions = await sessionStorageService.getAll();
-      jsonExportService.downloadAll(sessions, `SIGHT-export-all.json`);
-      toast.success(`Exported ${sessions.length} session(s)`);
+      if (sessions.length === 0) {
+        toast.info("No sessions to export");
+        return;
+      }
+
+      switch (format) {
+        case "json":
+          jsonExportService.downloadAll(sessions);
+          break;
+        case "csv":
+          csvExportService.downloadAll(sessions);
+          break;
+        case "pdf":
+          await pdfExportService.downloadAll(sessions);
+          break;
+      }
+
+      toast.success(`Exported ${sessions.length} session(s) as ${format.toUpperCase()}`);
     } catch {
-      toast.error("Failed to export sessions");
+      toast.error(`Failed to export as ${format.toUpperCase()}`);
     } finally {
-      setExporting(false);
+      setExportingFormat(null);
     }
   };
 
@@ -102,16 +122,37 @@ const SettingsPage = () => {
             <Download className="h-4 w-4 text-brand" /> Export all data
           </div>
           <p className="text-xs text-muted-foreground">
-            Download every session on this device as a single JSON bundle.
+            Download every session on this device. Choose your preferred format.
           </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportAll}
-            disabled={exporting}
-          >
-            {exporting ? "Preparing…" : "Export all sessions"}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleExportAll("pdf")}
+              disabled={exportingFormat !== null}
+            >
+              <FileText className="mr-1.5 h-3.5 w-3.5" />
+              {exportingFormat === "pdf" ? "Preparing PDF…" : "Export as PDF"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleExportAll("csv")}
+              disabled={exportingFormat !== null}
+            >
+              <Table className="mr-1.5 h-3.5 w-3.5" />
+              {exportingFormat === "csv" ? "Preparing CSV…" : "Export as CSV"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleExportAll("json")}
+              disabled={exportingFormat !== null}
+            >
+              <FileJson className="mr-1.5 h-3.5 w-3.5" />
+              {exportingFormat === "json" ? "Preparing JSON…" : "Export as JSON"}
+            </Button>
+          </div>
         </section>
 
         <section className="rounded-2xl bg-card border border-destructive/20 p-5 shadow-sm space-y-3">
