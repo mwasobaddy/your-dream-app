@@ -334,7 +334,7 @@ const GroundHealInner = () => {
             size="lg"
             className={cn(
               "w-full h-12 transition-all",
-              "bg-gradient-teal text-teal-foreground hover:opacity-95",
+              "bg-gradient-brand text-brand-foreground hover:opacity-95",
               saving && "pointer-events-none opacity-80"
             )}
           >
@@ -471,7 +471,7 @@ function SummaryTile({
           <button
             type="button"
             onClick={onLabelRightClick}
-            className="inline-flex items-center gap-0.5 text-[10px] font-medium text-teal hover:text-teal/80 transition-colors"
+            className="inline-flex items-center gap-0.5 text-[10px] font-medium text-brand hover:text-brand/80 transition-colors"
           >
             <Pencil className="h-3 w-3" />
             {labelRight}

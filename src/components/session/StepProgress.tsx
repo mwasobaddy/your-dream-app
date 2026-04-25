@@ -23,7 +23,7 @@ export function StepProgress() {
             <div
               className={cn(
                 "flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium transition-all flex-1 min-w-0",
-                isActive && "bg-teal text-teal-foreground shadow-elegant",
+                isActive && "bg-brand text-brand-foreground shadow-elegant",
                 isDone && !isActive && "bg-success/10 text-success",
                 !isActive && !isDone && "bg-muted text-muted-foreground"
               )}
@@ -31,7 +31,7 @@ export function StepProgress() {
               <span
                 className={cn(
                   "grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-bold",
-                  isActive && "bg-teal-foreground/20",
+                  isActive && "bg-brand-foreground/20",
                   isDone && !isActive && "bg-success/20",
                   !isActive && !isDone && "bg-background/60"
                 )}

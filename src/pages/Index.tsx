@@ -39,7 +39,7 @@ const Index = () => {
         className="space-y-8"
       >
         <header className="text-center space-y-3 pt-4">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-teal-soft px-3 py-1 text-[11px] font-medium text-teal uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-[11px] font-medium text-brand uppercase tracking-wider">
             <Shield className="h-3 w-3" />
             Research prototype · v0.1
           </div>
@@ -62,7 +62,7 @@ const Index = () => {
               transition={{ delay: 0.1 + i * 0.06 }}
               className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-4 shadow-sm"
             >
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-teal-soft text-teal">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-brand-soft text-brand">
                 <step.icon className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -80,7 +80,7 @@ const Index = () => {
           <Button
             onClick={handleBegin}
             size="lg"
-            className="w-full bg-gradient-teal text-teal-foreground hover:opacity-95 shadow-elevated h-12"
+            className="w-full bg-gradient-brand text-brand-foreground hover:opacity-95 shadow-elevated h-12"
           >
             Begin session
             <ArrowRight className="ml-1 h-4 w-4" />

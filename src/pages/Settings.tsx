@@ -58,13 +58,13 @@ const SettingsPage = () => {
 
         <section className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Database className="h-4 w-4 text-teal" /> Storage
+            <Database className="h-4 w-4 text-brand" /> Storage
           </div>
           {usage ? (
             <>
               <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full bg-gradient-teal"
+                  className="h-full bg-gradient-brand"
                   style={{ width: `${Math.min(100, pct)}%` }}
                 />
               </div>
@@ -82,7 +82,7 @@ const SettingsPage = () => {
 
         <section className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Smartphone className="h-4 w-4 text-teal" /> Device
+            <Smartphone className="h-4 w-4 text-brand" /> Device
           </div>
           <div className="space-y-1">
             <p className="text-[11px] text-muted-foreground uppercase tracking-wider">
@@ -99,7 +99,7 @@ const SettingsPage = () => {
 
         <section className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm space-y-3">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <Download className="h-4 w-4 text-teal" /> Export all data
+            <Download className="h-4 w-4 text-brand" /> Export all data
           </div>
           <p className="text-xs text-muted-foreground">
             Download every session on this device as a single JSON bundle.

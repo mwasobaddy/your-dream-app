@@ -19,7 +19,7 @@ export function BodyMap({ selected, onToggle }: BodyMapProps) {
         {/* Stylised silhouette */}
         <defs>
           <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--teal-soft))" />
+            <stop offset="0%" stopColor="hsl(var(--brand-soft))" />
             <stop offset="100%" stopColor="hsl(var(--background))" />
           </linearGradient>
         </defs>
@@ -57,8 +57,8 @@ export function BodyMap({ selected, onToggle }: BodyMapProps) {
               className={cn(
                 "cursor-pointer transition-colors",
                 isSelected
-                  ? "fill-teal/40 stroke-teal"
-                  : "fill-transparent stroke-transparent hover:fill-teal/15"
+                  ? "fill-brand/40 stroke-brand"
+                  : "fill-transparent stroke-transparent hover:fill-brand/15"
               )}
               strokeWidth="2"
               onClick={() => onToggle(region.id)}

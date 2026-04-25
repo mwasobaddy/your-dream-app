@@ -83,10 +83,10 @@ const ScanInner = () => {
                 <button
                   key={id}
                   onClick={() => toggle(id)}
-                  className="inline-flex items-center gap-1 rounded-full bg-teal/10 px-2.5 py-1 text-xs font-medium text-teal hover:bg-teal/20"
+                  className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2.5 py-1 text-xs font-medium text-brand hover:bg-brand/20"
                 >
                   {region?.label ?? id}
-                  <span className="text-teal/60">×</span>
+                  <span className="text-brand/60">×</span>
                 </button>
               );
             })
@@ -97,7 +97,7 @@ const ScanInner = () => {
           onClick={handleNext}
           disabled={saving || selected.length === 0}
           size="lg"
-          className="w-full bg-gradient-teal text-teal-foreground hover:opacity-95 h-12"
+          className="w-full bg-gradient-brand text-brand-foreground hover:opacity-95 h-12"
         >
           {saving ? "Saving…" : "Continue to Identify"}
           <ArrowRight className="ml-1 h-4 w-4" />

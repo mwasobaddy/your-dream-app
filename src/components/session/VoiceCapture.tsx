@@ -75,12 +75,12 @@ export function VoiceCapture({
           {isRecording && (
             <>
               <motion.div
-                className="absolute inset-0 rounded-full bg-teal/30"
+                className="absolute inset-0 rounded-full bg-brand/30"
                 animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
                 transition={{ duration: 1.2, repeat: Infinity }}
               />
               <motion.div
-                className="absolute inset-0 rounded-full bg-teal/20"
+                className="absolute inset-0 rounded-full bg-brand/20"
                 animate={{ scale: [1, 1.9], opacity: [0.4, 0] }}
                 transition={{ duration: 1.2, repeat: Infinity, delay: 0.3 }}
               />
@@ -95,8 +95,8 @@ export function VoiceCapture({
             onTouchEnd={handlePointerUp}
             disabled={isProcessing}
             className={cn(
-              "relative grid h-28 w-28 place-items-center rounded-full text-teal-foreground transition-all shadow-elevated select-none",
-              isRecording ? "bg-destructive scale-105" : "bg-gradient-teal hover:scale-105",
+              "relative grid h-28 w-28 place-items-center rounded-full text-brand-foreground transition-all shadow-elevated select-none",
+              isRecording ? "bg-destructive scale-105" : "bg-gradient-brand hover:scale-105",
               isProcessing && "opacity-70",
               !isRecording && !isProcessing && "active:scale-95"
             )}
@@ -121,7 +121,7 @@ export function VoiceCapture({
               <p className="text-sm font-medium text-foreground">Recording — keep speaking…</p>
               <div className="mt-2 h-1.5 w-48 overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full bg-teal transition-[width] duration-100"
+                  className="h-full bg-brand transition-[width] duration-100"
                   style={{ width: `${progress * 100}%` }}
                 />
               </div>

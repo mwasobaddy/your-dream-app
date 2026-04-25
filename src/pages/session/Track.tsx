@@ -154,7 +154,7 @@ const TrackInner = () => {
           onClick={handleSave}
           disabled={!canSave || saving}
           size="lg"
-          className="w-full bg-gradient-teal text-teal-foreground hover:opacity-95 h-12"
+          className="w-full bg-gradient-brand text-brand-foreground hover:opacity-95 h-12"
         >
           {saving ? "Saving…" : "Save & finish session"}
           <ArrowRight className="ml-1 h-4 w-4" />

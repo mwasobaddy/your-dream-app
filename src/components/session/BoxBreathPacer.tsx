@@ -183,7 +183,7 @@ export const BoxBreathPacer = forwardRef<BoxBreathPacerHandle, BoxBreathPacerPro
             aria-label="Breath pacer"
             className={cn(
               "relative aspect-square w-3/4 rounded-3xl",
-              "bg-gradient-teal shadow-glow",
+              "bg-gradient-brand shadow-glow",
               "select-none",
               !running && !completed && "opacity-60"
             )}
@@ -204,10 +204,10 @@ export const BoxBreathPacer = forwardRef<BoxBreathPacerHandle, BoxBreathPacerPro
                   transition={{ duration: 0.25 }}
                   className="space-y-1"
                 >
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-teal-foreground/80">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-foreground/80">
                     {showCycle ? `Cycle ${Math.min(cycleNum, cycles)} / ${cycles}` : "Ready"}
                   </div>
-                  <div className="text-2xl font-bold text-teal-foreground">
+                  <div className="text-2xl font-bold text-brand-foreground">
                     {completed ? "Done" : running ? PHASE_LABEL[currentPhase] : "Begin"}
                   </div>
                 </motion.div>

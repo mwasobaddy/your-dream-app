@@ -5,5 +5,5 @@ import { registerSW } from "./pwa";
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Register service worker only outside Lovable preview / iframes (see ./pwa.ts)
+// Register service worker only outside Sight Lab preview / iframes (see ./pwa.ts)
 registerSW();

@@ -156,7 +156,7 @@ export function PressHold({
             cy="50"
             r="46"
             fill="none"
-            stroke="hsl(var(--teal))"
+            stroke="hsl(var(--brand))"
             strokeWidth="4"
             strokeLinecap="round"
             strokeDasharray={2 * Math.PI * 46}
@@ -181,7 +181,7 @@ export function PressHold({
               </motion.div>
             ) : pressed ? (
               <motion.div key="hold" className="space-y-1">
-                <div className="text-2xl font-bold text-teal">
+                <div className="text-2xl font-bold text-brand">
                   {Math.ceil((1 - progress) * totalSeconds)}
                 </div>
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground">

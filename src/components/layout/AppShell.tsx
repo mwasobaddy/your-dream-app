@@ -36,8 +36,8 @@ export function AppShell({
               </button>
             ) : (
               <Link to="/" className="flex items-center gap-2" aria-label="Home">
-                <div className="h-8 w-8 rounded-lg bg-gradient-teal grid place-items-center shadow-glow">
-                  <span className="text-teal-foreground text-xs font-bold tracking-tight">SL</span>
+                <div className="h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-glow">
+                  <span className="text-brand-foreground text-xs font-bold tracking-tight">SL</span>
                 </div>
                 <div className="leading-tight">
                   <div className="text-sm font-semibold">{APP_CONFIG.APP_NAME}</div>
