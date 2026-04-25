@@ -50,7 +50,8 @@ const SettingsPage = () => {
       }
 
       toast.success(`Exported ${sessions.length} session(s) as ${format.toUpperCase()}`);
-    } catch {
+    } catch (err) {
+      console.error('Export failed:', err);
       toast.error(`Failed to export as ${format.toUpperCase()}`);
     } finally {
       setExportingFormat(null);

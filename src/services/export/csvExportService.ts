@@ -34,7 +34,7 @@ function flattenSession(s: SightSession): FlatSessionRow {
     baseline_validity: s.steps.identify?.voice_prosody_baseline?.validity || '',
 
     // Ground / Heal
-    ground_adherence_pct: s.steps.ground_heal?.ground_adherence_ratio !== null
+    ground_adherence_pct: s.steps.ground_heal?.ground_adherence_ratio != null
       ? (s.steps.ground_heal!.ground_adherence_ratio! * 100).toFixed(1)
       : null,
     heal_hold_duration_ms: s.steps.ground_heal?.heal_hold_duration_ms ?? null,
