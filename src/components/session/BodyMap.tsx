@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { BodyChart } from "body-muscles";
+import { BodyChart, ViewSide } from "body-muscles";
 import { BODY_REGIONS, buildMuscleState } from "@/constants/bodyRegions";
 
 interface BodyMapProps {
