@@ -47,10 +47,10 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        teal: {
-          DEFAULT: "hsl(var(--teal))",
-          foreground: "hsl(var(--teal-foreground))",
-          soft: "hsl(var(--teal-soft))",
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          foreground: "hsl(var(--brand-foreground))",
+          soft: "hsl(var(--brand-soft))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
