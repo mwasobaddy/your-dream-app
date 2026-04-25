@@ -19,12 +19,21 @@ interface CaptureResult {
 }
 
 /**
+ * Returned by startCapture — the caller can stop early (press-release)
+ * or let the timeout fire automatically.
+ */
+interface CaptureController {
+  result: Promise<CaptureResult>;
+  stop: () => void;
+}
+
+/**
  * audioService — Service Pattern wrapper for microphone capture and prosody extraction.
  * Components/hooks must call this service rather than touching getUserMedia directly.
  *
- * Note: We use a ScriptProcessor-style capture (collecting frames from getUserMedia)
- * rather than an AudioWorklet here, because the YIN math is run AFTER capture on the
- * full buffer for accuracy. The buffer is discarded immediately after extractProsody.
+ * Capture uses the MediaRecorder API for clean, contiguous audio, then decodes
+ * with AudioContext.decodeAudioData. The raw buffer is discarded immediately
+ * after extractProsody — never persisted.
  */
 export const audioService = {
   async requestPermission(): Promise<"granted" | "denied"> {
@@ -37,58 +46,95 @@ export const audioService = {
     }
   },
 
-  async startCapture(durationMs = CAPTURE.DURATION_MS): Promise<CaptureResult> {
-    let stream: MediaStream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: false,
-        },
-      });
-    } catch {
-      return {
-        buffer: new Float32Array(0),
-        sampleRate: YIN_CONFIG.SAMPLE_RATE,
-        permission: "denied",
-      };
-    }
+  startCapture(durationMs = CAPTURE.DURATION_MS): CaptureController {
+    let stopFn: () => void = () => {};
+    let resolveResult: (value: CaptureResult | PromiseLike<CaptureResult>) => void;
+    const resultPromise = new Promise<CaptureResult>((resolve) => {
+      resolveResult = resolve;
+    });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const AudioCtx = (window.AudioContext || (window as any).webkitAudioContext) as typeof AudioContext;
-    const ctx = new AudioCtx();
-    const source = ctx.createMediaStreamSource(stream);
+    const controller: CaptureController = {
+      result: resultPromise,
+      stop: () => stopFn(),
+    };
 
-    // Collect audio via an AnalyserNode time-domain pull loop
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = YIN_CONFIG.BUFFER_SIZE;
-    source.connect(analyser);
+    (async () => {
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            channelCount: 1,
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: false,
+          },
+        });
+      } catch {
+        resolveResult({
+          buffer: new Float32Array(0),
+          sampleRate: YIN_CONFIG.SAMPLE_RATE,
+          permission: "denied",
+        });
+        return;
+      }
 
-    const sampleRate = ctx.sampleRate;
-    const totalSamples = Math.floor((durationMs / 1000) * sampleRate);
-    const collected = new Float32Array(totalSamples);
-    let writeIdx = 0;
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
+      const recorder = new MediaRecorder(stream, { mimeType });
+      const chunks: Blob[] = [];
+      let finished = false;
 
-    return new Promise<CaptureResult>((resolve) => {
-      const frame = new Float32Array(analyser.fftSize);
-      const tick = () => {
-        analyser.getFloatTimeDomainData(frame);
-        const remaining = totalSamples - writeIdx;
-        const take = Math.min(remaining, frame.length);
-        collected.set(frame.subarray(0, take), writeIdx);
-        writeIdx += take;
-        if (writeIdx < totalSamples) {
-          requestAnimationFrame(tick);
-        } else {
-          stream.getTracks().forEach((t) => t.stop());
-          ctx.close();
-          resolve({ buffer: collected, sampleRate, permission: "granted" });
+      // Wire up the stop function
+      stopFn = () => {
+        if (recorder.state !== "inactive") {
+          finished = true;
+          recorder.stop();
         }
       };
-      requestAnimationFrame(tick);
-    });
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(chunks, { type: mimeType });
+        const arrayBuffer = await blob.arrayBuffer();
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const AudioCtx = (window.AudioContext || (window as any).webkitAudioContext) as typeof AudioContext;
+        const ctx = new AudioCtx();
+        await ctx.resume();
+
+        try {
+          const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+          const sampleRate = audioBuffer.sampleRate;
+          const channelData = audioBuffer.getChannelData(0);
+          ctx.close();
+          resolveResult({ buffer: channelData, sampleRate, permission: "granted" });
+        } catch {
+          ctx.close();
+          resolveResult({
+            buffer: new Float32Array(0),
+            sampleRate: YIN_CONFIG.SAMPLE_RATE,
+            permission: "denied",
+          });
+        }
+      };
+
+      recorder.start();
+
+      // Auto-stop after max duration (safety net for hold-to-record)
+      setTimeout(() => {
+        if (!finished && recorder.state !== "inactive") {
+          finished = true;
+          recorder.stop();
+        }
+      }, durationMs);
+    })();
+
+    return controller;
   },
 
   extractProsody(capture: CaptureResult): VoiceProsodyFeatures {
@@ -122,7 +168,7 @@ export const audioService = {
         YIN_CONFIG.THRESHOLD
       );
       totalFrames++;
-      if (yinResult.pitch_hz !== null && energyDb > -50) {
+      if (yinResult.pitch_hz !== null && energyDb > -60) {
         pitches.push(yinResult.pitch_hz);
         voicedFrames++;
       }
@@ -131,6 +177,17 @@ export const audioService = {
     const overallEnergyDb = computeRMSdb(buffer);
     const snrDb = estimateSNRdb(frameEnergies.filter((e) => isFinite(e)));
     const voicedRatio = totalFrames > 0 ? voicedFrames / totalFrames : 0;
+
+    // Debug: log capture metrics to help diagnose quality issues
+    console.log("[audioService] capture metrics:", {
+      bufferLength: buffer.length,
+      sampleRate,
+      totalFrames,
+      voicedFrames,
+      voicedRatio: voicedRatio.toFixed(3),
+      overallEnergyDb: overallEnergyDb?.toFixed(1),
+      snrDb: snrDb?.toFixed(1),
+    });
     const validity = evaluateQuality({ snrDb, voicedFramesRatio: voicedRatio });
 
     return {
