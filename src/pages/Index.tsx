@@ -1,106 +1,147 @@
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Mic, Activity, Wind, LineChart, ArrowRight } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { CamoBackground } from "@/components/layout/CamoBackground";
+import { CompassRing } from "@/components/compass/CompassRing";
+import { SessionOverlay } from "@/components/compass/SessionOverlay";
+import { useSessionStore, STEP_ORDER } from "@/stores/sessionStore";
 import { startNewSession } from "@/services/session/sessionOrchestrator";
-import { useSessionStore } from "@/stores/sessionStore";
-import { toast } from "sonner";
+import type { StepName } from "@/types/session";
 
-const STEPS = [
-  { icon: Activity, label: "Scan", desc: "Body sensations" },
-  { icon: Mic, label: "Identify", desc: "Name the state · voice baseline" },
-  { icon: Wind, label: "Ground & Heal", desc: "Box breath + somatic press" },
-  { icon: LineChart, label: "Track", desc: "Voice delta + reflection" },
-];
+/**
+ * Route map from StepName to the actual session page path.
+ */
+const STEP_ROUTE: Record<StepName, string> = {
+  scan: "/session/scan",
+  identify: "/session/identify",
+  ground_heal: "/session/ground-heal",
+  track: "/session/track",
+};
 
 const Index = () => {
   const navigate = useNavigate();
-  const setActiveSession = useSessionStore((s) => s.setActiveSession);
+  const [searchParams] = useSearchParams();
+  const {
+    activeSessionId,
+    currentStep,
+    completedSteps,
+    setActiveSession,
+    resetSession,
+  } = useSessionStore();
 
-  const handleBegin = async () => {
-    try {
-      const id = await startNewSession();
-      setActiveSession(id);
-      navigate("/session/scan");
-    } catch (err) {
-      toast.error("Could not start session", {
-        description: err instanceof Error ? err.message : "Storage error",
-      });
+  const [overlayStep, setOverlayStep] = useState<StepName | null>(null);
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [starting, setStarting] = useState(false);
+  const autoOpenTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const sessionActive = !!activeSessionId;
+  const isComplete =
+    sessionActive && completedSteps.length === STEP_ORDER.length;
+
+  // ── Auto-open overlay when returning from a completed step ────
+  // The session pages navigate to "/?next=<step>" after completing.
+  // We show the compass briefly, then auto-open the overlay for the next step.
+  useEffect(() => {
+    const nextStep = searchParams.get("next") as StepName | null;
+    if (nextStep && STEP_ORDER.includes(nextStep) && sessionActive) {
+      // Ensure store is in sync
+      useSessionStore.setState({ currentStep: nextStep });
+
+      // Brief delay so the user sees progress on the compass ring
+      autoOpenTimer.current = setTimeout(() => {
+        setOverlayStep(nextStep);
+        setOverlayOpen(true);
+      }, 600);
+
+      return () => {
+        if (autoOpenTimer.current) clearTimeout(autoOpenTimer.current);
+      };
     }
-  };
+  }, [searchParams, sessionActive]);
+
+  // ── Center click ──────────────────────────────────────────────
+  const handleCenterClick = useCallback(async () => {
+    if (isComplete) {
+      if (activeSessionId) {
+        navigate(`/session/summary/${activeSessionId}`);
+      }
+      resetSession();
+      return;
+    }
+
+    if (!sessionActive) {
+      setStarting(true);
+      try {
+        const id = await startNewSession();
+        setActiveSession(id);
+        setOverlayStep("scan");
+        setOverlayOpen(true);
+      } catch (err) {
+        console.error("Could not start session", err);
+      } finally {
+        setStarting(false);
+      }
+      return;
+    }
+
+    // Session in progress — open overlay for current step
+    if (currentStep) {
+      setOverlayStep(currentStep);
+      setOverlayOpen(true);
+    }
+  }, [sessionActive, isComplete, activeSessionId, currentStep, navigate, setActiveSession, resetSession]);
+
+  // ── Step node click ───────────────────────────────────────────
+  const handleStepClick = useCallback(
+    (step: StepName) => {
+      if (step === currentStep) {
+        setOverlayStep(step);
+        setOverlayOpen(true);
+      } else if (
+        !completedSteps.includes(step) &&
+        completedSteps.includes(STEP_ORDER[STEP_ORDER.indexOf(step) - 1])
+      ) {
+        // Unlocked step — set as current and open overlay
+        useSessionStore.setState({ currentStep: step });
+        setOverlayStep(step);
+        setOverlayOpen(true);
+      }
+    },
+    [currentStep, completedSteps],
+  );
+
+  // ── Overlay "Begin" — navigate to the step's full page ────────
+  const handleOverlayBegin = useCallback(() => {
+    setOverlayOpen(false);
+    if (overlayStep) {
+      useSessionStore.setState({ currentStep: overlayStep });
+      navigate(STEP_ROUTE[overlayStep]);
+    }
+  }, [overlayStep, navigate]);
+
+  const handleOverlayClose = useCallback(() => {
+    setOverlayOpen(false);
+  }, []);
 
   return (
-    <AppShell>
-      <motion.section
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="space-y-8"
-      >
-        <header className="text-center space-y-3 pt-4">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Somatic Emotional<br />
-            Regulation Protocol
-          </h1>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-            A four-step somatic check-in. Captures body, voice, breath, and shift —
-            entirely on this device. No PII is collected. Your data is yours.
-          </p>
-        </header>
+    <div style={{ position: "fixed", inset: 0, overflow: "hidden" }}>
+      <CamoBackground />
 
-        <div className="grid gap-3">
-          {STEPS.map((step, i) => (
-            <motion.div
-              key={step.label}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 + i * 0.06 }}
-              className="flex items-center gap-4 rounded-xl border border-border/60 bg-card p-4 shadow-sm"
-            >
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-brand-soft text-brand">
-                <step.icon className="h-5 w-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold">
-                  <span className="text-muted-foreground mr-1.5">{i + 1}.</span>
-                  {step.label}
-                </div>
-                <div className="text-xs text-muted-foreground">{step.desc}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+      <CompassRing
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        sessionActive={sessionActive}
+        isComplete={isComplete}
+        onCenterClick={handleCenterClick}
+        onStepClick={handleStepClick}
+      />
 
-        <div className="space-y-3 pt-2">
-          <Button
-            onClick={handleBegin}
-            size="lg"
-            className="w-full bg-gradient-brand text-brand-foreground hover:opacity-95 shadow-elevated h-12"
-          >
-            Begin session
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="outline" asChild className="flex-1">
-              <Link to="/history">History</Link>
-            </Button>
-            <Button variant="outline" asChild className="flex-1">
-              <Link to="/settings">Settings</Link>
-            </Button>
-          </div>
-        </div>
-
-        <p className="text-[11px] text-muted-foreground text-center leading-relaxed pt-4 border-t border-border/40">
-          Everything runs entirely on this device. No PII is ever collected,
-          transmitted, or stored externally. Your data is yours —{" "}
-          <Link to="/settings" className="underline underline-offset-2 hover:text-foreground transition-colors">
-            visit settings
-          </Link>{" "}
-          to manage or export it.
-        </p>
-      </motion.section>
-    </AppShell>
+      <SessionOverlay
+        step={overlayStep}
+        open={overlayOpen}
+        onBegin={handleOverlayBegin}
+        onClose={handleOverlayClose}
+      />
+    </div>
   );
 };
 
