@@ -3,131 +3,149 @@
 @tailwind utilities;
 
 /*
-  Brand Design System
-  Brand: Orange (#FF6B35) + Black + White.
+  SIGHT Tactical Design System
+  Dark military-inspired palette with cream/gold accents.
   All colors are HSL. Components MUST use semantic tokens, never raw hex/rgb.
 */
 
 @layer base {
   :root {
-    /* Surfaces — white / off-white */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 7%;
+    /* Surfaces — dark tactical */
+    --background: 18 74% 15%;
+    --foreground: 40 70% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
+    --card: 18 40% 12%;
+    --card-foreground: 40 70% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover: 18 40% 12%;
+    --popover-foreground: 40 70% 92%;
 
-    /* Brand — Orange (#FF6B35 ≈ hsl(17 100% 60%)) */
-    --brand: 17 100% 60%;
-    --brand-foreground: 0 0% 0%;
-    --brand-soft: 17 70% 92%;
+    /* Brand — cream/gold military accent */
+    --brand: 40 70% 88%;
+    --brand-foreground: 18 74% 21%;
+    --brand-soft: 18 30% 18%;
 
     /* For backwards compat — maps to brand */
-    --primary: 0 0% 7%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 40 70% 88%;
+    --primary-foreground: 18 74% 21%;
 
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 7%;
+    --secondary: 18 20% 18%;
+    --secondary-foreground: 40 70% 80%;
 
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 18 15% 22%;
+    --muted-foreground: 40 30% 65%;
 
-    --accent: 17 70% 92%;
-    --accent-foreground: 17 100% 40%;
+    --accent: 40 40% 25%;
+    --accent-foreground: 40 70% 88%;
 
-    --destructive: 0 75% 50%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 38 92% 50%;
+    --warning: 38 80% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --success: 152 60% 38%;
+    --success: 120 40% 55%;
     --success-foreground: 0 0% 100%;
 
-    --border: 0 0% 86%;
-    --input: 0 0% 86%;
-    --ring: 17 100% 60%;
+    --border: 40 15% 25%;
+    --input: 40 15% 25%;
+    --ring: 40 70% 88%;
 
     --radius: 0.875rem;
 
-    /* Emotional state accents — used by EMOTIONAL_STATES taxonomy */
-    --state-calm: 17 70% 50%;
-    --state-anxious: 38 90% 55%;
-    --state-sad: 0 0% 45%;
-    --state-angry: 0 75% 55%;
-    --state-joyful: 45 95% 55%;
-    --state-tender: 320 55% 65%;
-    --state-alert: 270 60% 60%;
-    --state-numb: 0 0% 50%;
+    /* Emotional state accents — muted for tactical theme */
+    --state-calm: 40 40% 55%;
+    --state-anxious: 38 70% 50%;
+    --state-sad: 40 10% 45%;
+    --state-angry: 0 60% 55%;
+    --state-joyful: 45 70% 55%;
+    --state-tender: 320 40% 60%;
+    --state-alert: 270 40% 55%;
+    --state-numb: 40 5% 45%;
 
     /* Gradients & shadows */
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 7%), hsl(0 0% 25%));
-    --gradient-brand: linear-gradient(135deg, hsl(17 100% 60%) 0%, hsl(17 100% 45%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(17 70% 96%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(40 70% 88%), hsl(40 50% 70%));
+    --gradient-brand: linear-gradient(135deg, hsl(40 70% 88%) 0%, hsl(40 50% 65%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(18 74% 15%) 0%, hsl(18 50% 10%) 100%);
 
-    --shadow-sm: 0 1px 2px hsl(0 0% 7% / 0.06);
-    --shadow-md: 0 4px 12px -2px hsl(0 0% 7% / 0.10);
-    --shadow-lg: 0 12px 32px -8px hsl(0 0% 7% / 0.18);
-    --shadow-glow: 0 0 24px hsl(17 100% 60% / 0.35);
+    --shadow-sm: 0 1px 2px hsl(18 74% 5% / 0.4);
+    --shadow-md: 0 4px 12px -2px hsl(18 74% 5% / 0.5);
+    --shadow-lg: 0 12px 32px -8px hsl(18 74% 5% / 0.6);
+    --shadow-glow: 0 0 24px hsl(40 70% 88% / 0.15);
 
-    /* Sidebar (unused but kept for shadcn compatibility) */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 7%;
-    --sidebar-primary: 17 100% 60%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 94%;
-    --sidebar-accent-foreground: 0 0% 7%;
-    --sidebar-border: 0 0% 86%;
-    --sidebar-ring: 17 100% 60%;
+    /* Sidebar */
+    --sidebar-background: 18 74% 12%;
+    --sidebar-foreground: 40 70% 92%;
+    --sidebar-primary: 40 70% 88%;
+    --sidebar-primary-foreground: 18 74% 21%;
+    --sidebar-accent: 18 20% 18%;
+    --sidebar-accent-foreground: 40 70% 92%;
+    --sidebar-border: 40 15% 25%;
+    --sidebar-ring: 40 70% 88%;
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 95%;
+    --background: 18 74% 15%;
+    --foreground: 40 70% 92%;
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 18 40% 12%;
+    --card-foreground: 40 70% 92%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 18 40% 12%;
+    --popover-foreground: 40 70% 92%;
 
-    --brand: 17 100% 55%;
-    --brand-foreground: 0 0% 0%;
-    --brand-soft: 17 50% 15%;
+    --brand: 40 70% 88%;
+    --brand-foreground: 18 74% 21%;
+    --brand-soft: 18 30% 18%;
 
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 5%;
+    --primary: 40 70% 88%;
+    --primary-foreground: 18 74% 21%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 18 20% 18%;
+    --secondary-foreground: 40 70% 80%;
 
-    --muted: 0 0% 16%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 18 15% 22%;
+    --muted-foreground: 40 30% 65%;
 
-    --accent: 17 50% 15%;
-    --accent-foreground: 17 80% 75%;
+    --accent: 40 40% 25%;
+    --accent-foreground: 40 70% 88%;
 
-    --destructive: 0 70% 50%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 17 100% 55%;
+    --border: 40 15% 25%;
+    --input: 40 15% 25%;
+    --ring: 40 70% 88%;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+ * {
+ @apply border-border;
+ -webkit-tap-highlight-color: transparent;
+ }
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
+ html {
+ font-size: 16px;
+ -webkit-font-smoothing: antialiased;
+ }
+
+ body {
+ @apply bg-background text-foreground antialiased;
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+ font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+ overflow: hidden;
+ height: 100vh;
+ width: 100vw;
+ margin: 0;
+ padding: 0;
+ }
+
+ #root {
+ height: 100vh;
+ width: 100vw;
+ overflow: hidden;
+ }
 
   h1, h2, h3, h4 {
     @apply tracking-tight;
@@ -141,4 +159,22 @@
   .shadow-elegant { box-shadow: var(--shadow-md); }
   .shadow-elevated { box-shadow: var(--shadow-lg); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+
+  /* Pulse animation for compass center node */
+  @keyframes sight-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* Glass-morphism utility */
+  .glass {
+    background: hsl(var(--card) / 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .glass-light {
+    background: hsl(var(--card) / 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
