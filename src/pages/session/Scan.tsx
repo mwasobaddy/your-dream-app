@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { StepProgress } from "@/components/session/StepProgress";
 import { StepGuard } from "@/components/layout/StepGuard";
 import { BodyMap } from "@/components/session/BodyMap";
@@ -42,8 +42,8 @@ const ScanInner = () => {
         selected,
         Math.round(performance.now() - startedAtRef.current)
       );
-      advanceStep("scan");
-      navigate("/session/identify");
+ advanceStep("scan");
+ navigate("/?next=identify");
     } catch (err) {
       toast.error("Could not save", {
         description: err instanceof Error ? err.message : undefined,
@@ -54,7 +54,7 @@ const ScanInner = () => {
   };
 
   return (
-    <AppShell>
+    <TacticalShell>
       <StepProgress />
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -99,11 +99,11 @@ const ScanInner = () => {
           size="lg"
           className="w-full bg-gradient-brand text-brand-foreground hover:opacity-95 h-12"
         >
-          {saving ? "Saving…" : "Continue to Identify"}
+          {saving ? "Saving…" : "Save & continue"}
           <ArrowRight className="ml-1 h-4 w-4" />
         </Button>
       </motion.div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

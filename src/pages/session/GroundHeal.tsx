@@ -11,7 +11,7 @@ import {
   RefreshCw,
   Save,
 } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { StepProgress } from "@/components/session/StepProgress";
 import { StepGuard } from "@/components/layout/StepGuard";
 import {
@@ -139,8 +139,8 @@ const GroundHealInner = () => {
         heal_release_velocity_ms: press.release_velocity_ms,
       });
       advanceStep("ground_heal");
-      setSaved(true);
-      navigate("/session/track");
+ setSaved(true);
+ navigate("/?next=track");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong while saving.";
       setSaveError(message);
@@ -214,7 +214,7 @@ const GroundHealInner = () => {
   };
 
   return (
-    <AppShell>
+    <TacticalShell>
       <StepProgress />
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -431,7 +431,7 @@ const GroundHealInner = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

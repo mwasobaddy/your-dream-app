@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { StepProgress } from "@/components/session/StepProgress";
 import { StepGuard } from "@/components/layout/StepGuard";
 import { StateCardGrid } from "@/components/session/StateCardGrid";
@@ -44,11 +44,8 @@ const IdentifyInner = () => {
     setSaving(true);
     try {
       await identifyService.save(activeSessionId, stateId, prosody);
-      advanceStep("identify");
-      toast.success("Baseline saved", {
-        description: "Now let's slow things down with Ground & Heal.",
-      });
-      navigate("/session/ground-heal");
+ advanceStep("identify");
+ navigate("/?next=ground_heal");
     } catch (err) {
       toast.error("Could not save", {
         description: err instanceof Error ? err.message : undefined,
@@ -61,7 +58,7 @@ const IdentifyInner = () => {
   const canSave = !!stateId && !!prosody;
 
   return (
-    <AppShell>
+    <TacticalShell>
       <StepProgress />
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -109,7 +106,7 @@ const IdentifyInner = () => {
           quality flags are stored.
         </p>
       </motion.div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

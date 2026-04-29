@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, AlertTriangle, FileDown } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { StepProgress } from "@/components/session/StepProgress";
 import { StepGuard } from "@/components/layout/StepGuard";
 import { VoiceCapture } from "@/components/session/VoiceCapture";
@@ -70,7 +70,7 @@ const TrackInner = () => {
   const showResult = postProsody && !canSave;
 
   return (
-    <AppShell>
+    <TacticalShell>
       <StepProgress />
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -164,7 +164,7 @@ const TrackInner = () => {
           Once saved, this session will appear in your history.
         </p>
       </motion.div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 
