@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { CamoBackground } from "@/components/layout/CamoBackground";
+import { ShellNavigation } from "@/components/layout/ShellNavigation";
 
 interface TacticalShellProps {
   children: React.ReactNode;
@@ -137,18 +138,7 @@ export function TacticalShell({
                 </div>
               )}
             </div>
-            {!isHome && !showBack && (
-              <Link
-                to="/"
-                style={{
-                  fontSize: "0.75rem",
-                  color: "hsl(var(--muted-foreground))",
-                  textDecoration: "none",
-                }}
-              >
-                Home
-              </Link>
-            )}
+            <ShellNavigation />
           </div>
         </header>
 

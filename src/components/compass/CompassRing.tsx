@@ -189,12 +189,6 @@ export function CompassRing({
         </button>
       </div>
 
-      {/* Trust pill */}
-      <div className="compass-trust-pill">
-        <span className="compass-trust-dot" />
-        <span>Local-only</span>
-      </div>
-
       {/* Bottom hint */}
       <p className="compass-bottom-hint">{bottomHint}</p>
     </div>

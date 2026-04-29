@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
 import { jsonExportService } from "@/services/export/jsonExportService";
 import { csvExportService } from "@/services/export/csvExportService";
@@ -68,7 +68,7 @@ const SettingsPage = () => {
   const pct = usage && usage.quota > 0 ? (usage.usage / usage.quota) * 100 : 0;
 
   return (
-    <AppShell>
+    <TacticalShell>
       <div className="space-y-6">
         <header className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
@@ -168,7 +168,7 @@ const SettingsPage = () => {
           </Button>
         </section>
       </div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { CamoBackground } from "@/components/layout/CamoBackground";
+import { ShellNavigation } from "@/components/layout/ShellNavigation";
 import { CompassRing } from "@/components/compass/CompassRing";
 import { SessionOverlay } from "@/components/compass/SessionOverlay";
 import { useSessionStore, STEP_ORDER } from "@/stores/sessionStore";
@@ -125,6 +126,12 @@ const Index = () => {
   return (
     <div style={{ position: "fixed", inset: 0, overflow: "hidden" }}>
       <CamoBackground />
+
+      <div className="absolute inset-x-0 top-0 z-20 px-4 pt-3">
+        <div className="mx-auto flex max-w-2xl justify-end">
+          <ShellNavigation />
+        </div>
+      </div>
 
       <CompassRing
         currentStep={currentStep}

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
 import type { SightSession } from "@/types/session";
 import { Button } from "@/components/ui/button";
@@ -47,7 +47,7 @@ const HistoryPage = () => {
   };
 
   return (
-    <AppShell>
+    <TacticalShell>
       <div className="space-y-5">
         <header className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">History</h2>
@@ -203,7 +203,7 @@ const HistoryPage = () => {
           </>
         )}
       </div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

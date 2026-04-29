@@ -13,7 +13,7 @@ import {
   BarChart3,
   Sparkles,
 } from "lucide-react";
-import { AppShell } from "@/components/layout/AppShell";
+import { TacticalShell } from "@/components/layout/TacticalShell";
 import { Button } from "@/components/ui/button";
 import { ExportPanel } from "@/components/export/ExportPanel";
 import { sessionStorageService } from "@/services/storage/sessionStorageService";
@@ -126,17 +126,17 @@ const SessionSummaryPage = () => {
 
   if (loading) {
     return (
-      <AppShell>
+      <TacticalShell>
         <div className="flex items-center justify-center py-24">
           <p className="text-sm text-muted-foreground">Loading session…</p>
         </div>
-      </AppShell>
+      </TacticalShell>
     );
   }
 
   if (!session) {
     return (
-      <AppShell>
+      <TacticalShell>
         <div className="space-y-4 py-12 text-center">
           <FileText className="h-10 w-10 mx-auto text-muted-foreground" />
           <p className="font-medium">Session not found</p>
@@ -147,7 +147,7 @@ const SessionSummaryPage = () => {
             Go to history
           </Button>
         </div>
-      </AppShell>
+      </TacticalShell>
     );
   }
 
@@ -159,7 +159,7 @@ const SessionSummaryPage = () => {
     : now - start;
 
   return (
-    <AppShell>
+    <TacticalShell>
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -260,7 +260,7 @@ const SessionSummaryPage = () => {
           </div>
         </div>
       </motion.div>
-    </AppShell>
+    </TacticalShell>
   );
 };
 

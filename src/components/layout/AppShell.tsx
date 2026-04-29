@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { APP_CONFIG } from "@/lib/config";
+import { ShellNavigation } from "@/components/layout/ShellNavigation";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -56,14 +57,9 @@ export function AppShell({
               </div>
             )}
           </div>
-          {!isHome && !showBack && (
-            <Link
-              to="/"
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
-              Home
-            </Link>
-          )}
+          <div className="flex items-center justify-end min-w-0">
+            <ShellNavigation />
+          </div>
         </div>
       </header>
 
