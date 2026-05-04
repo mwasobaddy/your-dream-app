@@ -167,13 +167,9 @@ const SessionSummaryPage = () => {
       >
         {/* ── Header ── */}
         <header className="space-y-2 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-success/10 text-success px-4 py-1 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5" />
-            Session complete
-          </div>
-          <h2 className="text-2xl font-bold tracking-tight">Summary</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Session complete</h2>
           <p className="text-sm text-muted-foreground">
-            Here's your full session at a glance.
+            You noticed, named, settled, and verified. That's the S.I.G.H.T loop, and it gets faster with time. Your data, always your choice, your device.
           </p>
         </header>
 

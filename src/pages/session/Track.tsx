@@ -13,6 +13,7 @@ import { sessionStorageService } from "@/services/storage/sessionStorageService"
 import { ExportPanel } from "@/components/export/ExportPanel";
 import { YIN_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
+import { EMOTIONAL_STATES } from "@/constants/emotionalStates";
 import type { SightSession, VoiceProsodyFeatures, TrackStepData, VoiceDelta } from "@/types/session";
 import { toast } from "sonner";
 
@@ -80,13 +81,29 @@ const TrackInner = () => {
         <header className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">Track</h2>
           <p className="text-sm text-muted-foreground">
-            Let's check in and see how your voice has changed after the breathing exercise.
+            Stress lives in the voice too. Identify your baseline using the list below.
           </p>
         </header>
 
         <section className="space-y-3">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            1. Voice check-in
+            Suggested phrases to say:
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {EMOTIONAL_STATES.map((state) => (
+              <span
+                key={state.id}
+                className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground"
+              >
+                "{state.label}"
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Voice check-in
           </h3>
           <div className="rounded-2xl bg-card border border-border/60 p-5 shadow-sm">
             <VoiceCapture

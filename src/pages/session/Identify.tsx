@@ -68,7 +68,7 @@ const IdentifyInner = () => {
         <header className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">Identify</h2>
           <p className="text-sm text-muted-foreground">
-            Name what you're feeling, then capture a brief voice baseline.
+            First select the emotion that closely describes how you feel then name it to tame it.
           </p>
         </header>
 

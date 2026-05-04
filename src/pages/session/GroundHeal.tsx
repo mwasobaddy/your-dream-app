@@ -224,14 +224,13 @@ const GroundHealInner = () => {
         <header className="space-y-1">
           <h2 className="text-2xl font-bold tracking-tight">Ground &amp; Heal</h2>
           <p className="text-sm text-muted-foreground">
-            Slow the system with paced breath, then anchor with steady touch.
+            Your nervous system can't tell the difference between everyday stress and real danger. Hit the brake for a moment.
           </p>
         </header>
 
-        {/* ── Section 1: Box-breath pacer ── */}
+        {/* ── Section: Box-breath pacer ── */}
         <section ref={pacerSectionRef} className="space-y-3 scroll-mt-6">
           <SectionHeader
-            index={1}
             title="Box-breath pacer"
             done={!!pacer}
             meta={
@@ -250,10 +249,9 @@ const GroundHealInner = () => {
           </div>
         </section>
 
-        {/* ── Section 2: Press & hold ── */}
+        {/* ── Section: Press & hold ── */}
         <section ref={pressSectionRef} className="space-y-3 scroll-mt-6">
           <SectionHeader
-            index={2}
             title="Press & hold"
             done={!!press}
             meta={
@@ -268,6 +266,22 @@ const GroundHealInner = () => {
               onPressStart={handlePressStart}
               onPressEnd={handlePressEnd}
             />
+          </div>
+
+          <p className="text-xs text-center text-muted-foreground">
+            If you feel dizzy or have respiratory issues, you can skip this step.
+          </p>
+          <div className="flex justify-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setPacer({ pacer_phase_timestamps: {}, ground_adherence_ratio: 0, cycles_completed: 0, total_duration_ms: 0 });
+                setPress({ press_start_ms: 0, hold_duration_ms: 0, release_velocity_ms: 0 });
+              }}
+            >
+              Skip this step
+            </Button>
           </div>
         </section>
 
@@ -497,12 +511,10 @@ function SummaryTile({
 
 // ── Section header ─────────────────────────────────────────────────
 function SectionHeader({
-  index,
   title,
   done,
   meta,
 }: {
-  index: number;
   title: string;
   done?: boolean;
   meta?: string;
@@ -510,7 +522,7 @@ function SectionHeader({
   return (
     <div className="flex items-center justify-between">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        {index}. {title}
+        {title}
       </h3>
       {done && (
         <span
