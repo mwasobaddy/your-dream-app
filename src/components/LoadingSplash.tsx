@@ -11,7 +11,7 @@ export function LoadingSplash() {
 
     const timeout = window.setTimeout(() => {
       setVisible(false);
-    }, 300000);
+    }, 3000);
 
     return () => window.clearTimeout(timeout);
   }, [visible]);
