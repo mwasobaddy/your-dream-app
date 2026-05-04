@@ -11,7 +11,7 @@ export function LoadingSplash() {
 
     const timeout = window.setTimeout(() => {
       setVisible(false);
-    }, 3000);
+    }, 300000);
 
     return () => window.clearTimeout(timeout);
   }, [visible]);
@@ -27,23 +27,16 @@ export function LoadingSplash() {
             muted
             playsInline
             loop
-            className="h-[300px] w-full object-contain bg-transparent"
+            className="h-[300px] w-full object-fit-cover rounded-lg"
           >
-            <source src="/loader-bunny.webm" type="video/webm" />
-            <source src="/loader-bunny.mp4" type="video/mp4" />
+            <source src="/bg-loader.webm" type="video/webm" />
+            <source src="/loader-animation.mp4" type="video/mp4" />
           </video>
-          <div className="bottom-5 flex w-full justify-center">
-            <img
-              src="/basket-logo-transparent.png"
-              alt="Basket logo"
-              className="h-[150px] w-auto object-contain"
-            />
-          </div>
         </div>
 
         <div className="space-y-10 text-center text-white/90">
           <div className="text-[40px] uppercase tracking-[0.36em] text-white/60">
-            S.I.G.H.T LAB
+            S.I.G.H.T
           </div>
           <div className="text-xl font-semibold tracking-[0.18em] text-white">
             Tactical Healing
