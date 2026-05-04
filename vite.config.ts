@@ -14,15 +14,15 @@ export default defineConfig(async ({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === "development" ? (await import("sight-lab").catch(() => ({ componentTagger: () => null }))).componentTagger() : null,
+    mode === "development" ? (await import("S.I.G.H.T").catch(() => ({ componentTagger: () => null }))).componentTagger() : null,
     VitePWA({
       registerType: "autoUpdate",
       // Disable in dev so the preview iframe is never intercepted by a SW.
       devOptions: { enabled: false },
       includeAssets: ["favicon.ico", "robots.txt", "icons/*.png"],
       manifest: {
-        name: "SIGHT Lab",
-        short_name: "SIGHT",
+        name: "S.I.G.H.T",
+        short_name: "S.I.G.H.T",
         description: "Somatic Emotional Regulation Research Protocol",
         start_url: "/",
         display: "standalone",

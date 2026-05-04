@@ -22,7 +22,7 @@ const STEP_META: Record<
   ground_heal: {
     icon: "◐",
     label: "Ground",
-    desc: "Box breathing at 0.1Hz. Press and hold to release.",
+    desc: "Press and hold to release.",
     position: "bottom",
   },
   track: {
@@ -116,7 +116,7 @@ export function CompassRing({
     <div className="compass-container">
       {/* Brand */}
       <div className="compass-brand">
-        <span className="compass-brand-name">SIGHT</span>
+        <span className="compass-brand-name">S.I.G.H.T</span>
       </div>
 
       {/* Compass ring */}

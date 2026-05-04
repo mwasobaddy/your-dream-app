@@ -152,7 +152,7 @@ export function buildReportHTML(session: SightSession): string {
 </style>
 </head>
 <body>
-  <h1>SIGHT Lab — Session Report</h1>
+  <h1>S.I.G.H.T — Session Report</h1>
   <div class="meta">
     <strong>Session ID:</strong> ${session.session_id.slice(0, 8)}&nbsp;&nbsp;|&nbsp;&nbsp;
     <strong>Started:</strong> ${formatTimestamp(session.timestamp_start_iso)}&nbsp;&nbsp;|&nbsp;&nbsp;

@@ -3,7 +3,7 @@
 // here so the values are still locked for research reproducibility.
 
 export const APP_CONFIG = {
-  APP_NAME: "SIGHT Lab",
+  APP_NAME: "S.I.G.H.T",
   APP_VERSION: "0.1.0",
   SCHEMA_VERSION: 1 as const,
 } as const;

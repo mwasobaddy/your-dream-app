@@ -12,7 +12,7 @@ const STEP_DATA: Record<StepName, { title: string; desc: string }> = {
   },
   ground_heal: {
     title: "Ground & Heal",
-    desc: "Box breathing at 0.1Hz. Press and hold to release.",
+    desc: "Press and hold to release.",
   },
   track: {
     title: "Track",

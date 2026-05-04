@@ -127,7 +127,7 @@ function buildInputs(session: SightSession) {
   const { steps, device_metadata } = session;
 
   const p1 = {
-    title: 'SIGHT Report',
+    title: 'S.I.G.H.T Report',
     meta1: `Session: ${session.session_id.slice(0, 8)}  |  Started: ${fmt(session.timestamp_start_iso)}  |  ${session.status}`,
     meta2: `Device: ${device_metadata?.platform || '\u2014'} ${device_metadata?.screen_width || '?'}x${device_metadata?.screen_height || '?'}  |  App v${session.app_version}  |  Schema v${session.schema_version}`,
     h2_scan: '1. Scan \u2014 Body Awareness',
@@ -227,7 +227,7 @@ export const pdfExportService = {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `SIGHT-all-sessions-${Date.now()}.pdf`;
+    anchor.download = `S.I.G.H.T-all-sessions-${Date.now()}.pdf`;
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);

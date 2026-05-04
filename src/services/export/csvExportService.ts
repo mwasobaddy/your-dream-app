@@ -59,7 +59,7 @@ export const csvExportService = {
    */
   downloadSession(session: SightSession): void {
     const rows = [flattenSession(session)];
-    this._downloadRows(rows, `SIGHT-session-${session.session_id.slice(0, 8)}.csv`);
+    this._downloadRows(rows, `S.I.G.H.T-session-${session.session_id.slice(0, 8)}.csv`);
   },
 
   /**
@@ -68,7 +68,7 @@ export const csvExportService = {
   downloadAll(sessions: SightSession[]): void {
     if (sessions.length === 0) return;
     const rows = sessions.map(flattenSession);
-    this._downloadRows(rows, `SIGHT-all-sessions-${Date.now()}.csv`);
+    this._downloadRows(rows, `S.I.G.H.T-all-sessions-${Date.now()}.csv`);
   },
 
   _downloadRows(rows: FlatSessionRow[], filename: string): void {

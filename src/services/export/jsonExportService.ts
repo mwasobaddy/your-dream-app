@@ -12,7 +12,7 @@ export const jsonExportService = {
   downloadSession(session: SightSession): void {
     const bundle = {
       exported_at: new Date().toISOString(),
-      app: 'SIGHT Lab',
+      app: 'S.I.G.H.T',
       app_version: session.app_version,
       schema_version: session.schema_version,
       session_count: 1,
@@ -23,7 +23,7 @@ export const jsonExportService = {
       type: 'application/json',
     });
 
-    this._triggerDownload(blob, `SIGHT-session-${session.session_id.slice(0, 8)}.json`);
+    this._triggerDownload(blob, `S.I.G.H.T-session-${session.session_id.slice(0, 8)}.json`);
   },
 
   /**
@@ -34,7 +34,7 @@ export const jsonExportService = {
 
     const bundle = {
       exported_at: new Date().toISOString(),
-      app: 'SIGHT Lab',
+      app: 'S.I.G.H.T',
       app_version: sessions[0].app_version,
       schema_version: sessions[0].schema_version,
       session_count: sessions.length,
@@ -45,7 +45,7 @@ export const jsonExportService = {
       type: 'application/json',
     });
 
-    this._triggerDownload(blob, `SIGHT-all-sessions-${Date.now()}.json`);
+    this._triggerDownload(blob, `S.I.G.H.T-all-sessions-${Date.now()}.json`);
   },
 
   _triggerDownload(blob: Blob, filename: string): void {
