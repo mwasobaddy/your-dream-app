@@ -18,7 +18,7 @@ const isInIframe = (() => {
 const isPreviewHost =
   typeof window !== "undefined" &&
   (window.location.hostname.includes("id-preview--") ||
-    window.location.hostname.includes("sight-lab.com"));
+    window.location.hostname.includes("sight.com"));
 
 export function registerSW() {
   if (typeof window === "undefined") return;
